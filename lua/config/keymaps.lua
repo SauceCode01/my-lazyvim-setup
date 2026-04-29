@@ -18,3 +18,13 @@ vim.keymap.set("n", "<leader>cp", function()
   vim.fn.setreg("+", path)
   vim.notify("Copied: " .. path)
 end, { desc = "Copy File Path" })
+
+vim.keymap.set("n", "<leader>hk", "<cmd>WhichKey<cr>", { desc = "Show WhichKey" })
+
+-- vim.keymap.set("n", "<leader>ba", "<leader>bo<leader>bd", { remap = true, silent = true })
+
+vim.keymap.set("n", "<leader>ba", function()
+  -- Call the Lua functions directly
+  require("snacks").bufdelete.other()
+  require("snacks").bufdelete()
+end, { desc = "Delete ALL buffers (Close Other + Close Current)" })
