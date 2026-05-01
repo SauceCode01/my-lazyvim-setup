@@ -29,6 +29,7 @@ return {
                   -- ["p"] = "explorer_paste",
                   -- -- Optional: 'x' for cut (move)
                   -- ["x"] = "explorer_cut",
+                  ["E"] = "paste_windows_file",
                 },
               },
             },
@@ -40,6 +41,44 @@ return {
             },
 
             actions = {
+              paste_windows_file = function(picker)
+                -- Get clipboard content and clean it (remove quotes and newlines)
+                local clipboard = vim.fn.getreg("+"):gsub('^"', ""):gsub('"$', ""):gsub("[\r\n]", "")
+
+                -- Verify it's actually a valid file
+                if vim.fn.filereadable(clipboard) == 0 then
+                  vim.notify("Clipboard does not contain a valid file path:\n" .. clipboard, vim.log.levels.WARN)
+                  return
+                end
+
+                -- CORRECTED LINE: Get the currently focused item directly from the picker
+                local item = picker:current()
+                if not item then
+                  return
+                end
+
+                -- Determine target directory (if focused item is a file, use its parent folder)
+                local target_dir
+                if vim.fn.isdirectory(item.file) == 1 then
+                  target_dir = item.file
+                else
+                  target_dir = vim.fn.fnamemodify(item.file, ":h")
+                end
+
+                -- Construct destination path
+                local filename = vim.fn.fnamemodify(clipboard, ":t")
+                local dest = target_dir .. "/" .. filename
+
+                -- Copy the file using Neovim's native libuv API
+                local success, err = vim.uv.fs_copyfile(clipboard, dest)
+                if success then
+                  vim.notify("Pasted: " .. filename, vim.log.levels.INFO)
+                  -- Refresh the explorer to show the new file
+                  picker:find()
+                else
+                  vim.notify("Failed to paste file: " .. (err or "Unknown error"), vim.log.levels.ERROR)
+                end
+              end,
               explorer_paste = function(picker, item) --[[Override]]
                 local Tree = require("snacks.explorer.tree")
                 local files = vim.split(vim.fn.getreg(vim.v.register or "+") or "", "\n", { plain = true })

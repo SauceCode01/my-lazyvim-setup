@@ -42,3 +42,5 @@ vim.diagnostic.config({
 --     vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { underline = true, sp = "Cyan" })
 --   end,
 -- })
+
+vim.opt.clipboard = "unnamedplus"
