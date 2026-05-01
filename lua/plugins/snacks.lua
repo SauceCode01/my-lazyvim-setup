@@ -17,9 +17,11 @@ return {
 
                   -- 'l' opens the window picker to choose where to open the file
                   ["L"] = { { "pick_win", "jump" }, mode = { "n", "i" } },
+                  ["O"] = { { "pick_win", "jump" }, mode = { "n", "i" } },
 
                   -- 'L' opens the file normally (usually in the last active window)
                   ["l"] = { "confirm", mode = { "n", "i" } },
+                  ["o"] = { "confirm", mode = { "n", "i" } },
                 },
               },
             },
@@ -28,6 +30,10 @@ return {
                 position = "left",
               },
             },
+          },
+          projects = {
+            -- Sort strictly by chronological order (last opened), ignoring frecency score
+            sort = { fields = { "idx" } },
           },
         },
       },

@@ -22,3 +22,23 @@ vim.opt.breakindentopt = "shift:1"
 vim.opt.linebreak = true
 
 -- vim.opt.formatoptions:append({ "r", "o" })
+
+-- Force enable LSP diagnostic underlines
+vim.diagnostic.config({
+  underline = true,
+  virtual_text = true, -- Keeps the inline text on the right
+  signs = true,
+  update_in_insert = false,
+})
+
+-- Force standard straight underlines for errors/warnings instead of undercurls
+-- since lazyvim tokyonight hides the underlines
+-- vim.api.nvim_create_autocmd("ColorScheme", {
+--   pattern = "*",
+--   callback = function()
+--     vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", { underline = true, sp = "Red" })
+--     vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", { underline = true, sp = "Yellow" })
+--     vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", { underline = true, sp = "Blue" })
+--     vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { underline = true, sp = "Cyan" })
+--   end,
+-- })
